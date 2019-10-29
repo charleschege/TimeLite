@@ -3,6 +3,14 @@ name = "timelite"
 version = "1.0.0"
 authors = ["Charles <charleschege@protonmail.ch>"]
 edition = "2018"
+description = "Secrets Authentication, Encryption and Verification Engine with Key-Value Store"
+homepage = "https://github.com/charleschege/TimeLite"
+repository = "https://github.com/charleschege/TimeLite"
+license = "Apache-2.0"
+keywords = ["time", "nanoseconds", "seconds", "date", "convertor"]
+categories = ["time"]
+readme = "README.md"
+maintenance = { status = "actively-developed" }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
