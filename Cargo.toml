@@ -1,6 +1,6 @@
 [package]
 name = "timelite"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Charles <charleschege@protonmail.ch>"]
 edition = "2018"
 
