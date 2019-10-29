@@ -1,6 +1,6 @@
 [package]
 name = "timelite"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["Charles Chege <charleschege@protonmail.ch>"]
 edition = "2018"
 description = "TimeLite is a simple library to convert days, weeks, months and years into seconds."
