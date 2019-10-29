@@ -8,7 +8,7 @@ homepage = "https://github.com/charleschege/TimeLite"
 repository = "https://github.com/charleschege/TimeLite"
 license = "Apache-2.0"
 keywords = ["time", "nanoseconds", "seconds", "date", "convertor"]
-categories = ["time"]
+categories = ["date-and-time"]
 readme = "README.md"
 
 [badges]
