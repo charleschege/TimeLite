@@ -1,7 +1,4 @@
-use crate::{
-    MICROS_PER_SEC, MILLIS_PER_SEC, NANOS_PER_SEC, SECONDS_PER_DAY, SECONDS_PER_HOUR,
-    SECONDS_PER_MINUTE, SECONDS_PER_WEEK,
-};
+use crate::{MICROS_PER_SEC, MILLIS_PER_SEC, NANOS_PER_SEC, SECONDS_PER_DAY, SECONDS_PER_HOUR,SECONDS_PER_MINUTE, SECONDS_PER_WEEK};
 
     /// The main struct that handles conversion from human readable time formats to seconds
     /// ### Structure

@@ -1,7 +1,3 @@
-#![deny(missing_docs)]
-#![deny(missing_doc_code_examples)]
-#![deny(unsafe_code)]
-
 //! TimeLite is a simple library to convert days, weeks, months and years into seconds.
 //!
 //! This library is not necessary if you are using something like `chrono` crate but its purpose is to be
@@ -87,11 +83,20 @@
 //! let timer = LiteDuration::years(1);
 //! ```
 
-mod constants;
-pub use constants::{
-    MICROS_PER_SEC, MILLIS_PER_SEC, NANOS_PER_MICRO, NANOS_PER_MILLI, NANOS_PER_SEC,
-    SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK,
-};
+#![deny(missing_docs)]
+#![deny(missing_doc_code_examples)]
+#![deny(unsafe_code)]
 
+    /// Module that handles time constants
+#[allow(missing_doc_code_examples)]
+mod constants;
+pub use constants::{MICROS_PER_SEC, MILLIS_PER_SEC, NANOS_PER_MICRO, NANOS_PER_MILLI, NANOS_PER_SEC,SECONDS_PER_DAY,SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK};
+
+    /// The module that handles conversions
+    ///
+    /// ### Usage
+    /// ```
+    /// use timelite::LiteDuration;
+    /// ```
 mod duration;
 pub use duration::LiteDuration;
