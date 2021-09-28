@@ -2,7 +2,35 @@ use core::fmt;
 
 pub(crate) const NOT_LEAP_YEAR_MONTHS: [i64; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 pub(crate) const LEAP_YEAR_MONTHS: [i64; 12] = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
+pub const SECONDS_PER_DAY: i64 = 60 * 60 * 24; //86400 seconds per 24 hours
+pub const NOT_LEAP_YEAR_MONTHS_SECONDS: [i64; 12] = [
+    NOT_LEAP_YEAR_MONTHS[0] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[1] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[2] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[3] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[4] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[5] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[6] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[7] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[8] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[9] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[10] * SECONDS_PER_DAY,
+    NOT_LEAP_YEAR_MONTHS[11] * SECONDS_PER_DAY,
+];
+pub const LEAP_YEAR_MONTHS_SECONDS: [i64; 12] = [
+    LEAP_YEAR_MONTHS[0] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[1] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[2] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[3] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[4] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[5] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[6] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[7] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[8] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[9] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[10] * SECONDS_PER_DAY,
+    LEAP_YEAR_MONTHS[11] * SECONDS_PER_DAY,
+];
 pub type UnixTimestamp = i64;
 
 pub enum YearType {
@@ -71,9 +99,9 @@ impl fmt::Display for TimeStandard {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Utc => write!(f, "{}", "TimeStandard::UTC"),
-            Self::Tai64 => write!(f, "{}", "TimeStandard::TAI64"),
-            Self::Tai64N => write!(f, "{}", "TimeStandard::TAI64N"),
-            Self::Tai64NA => write!(f, "{}", "TimeStandard::TAI64NA"),
+            Self::Tai64 => write!(f, "{}", "TimeStandard::TAi64"),
+            Self::Tai64N => write!(f, "{}", "TimeStandard::TAi64N"),
+            Self::Tai64NA => write!(f, "{}", "TimeStandard::TAi64NA"),
             Self::UtcOffset => write!(f, "{}", "TimeStandard::UTC OFFSET"),
         }
     }

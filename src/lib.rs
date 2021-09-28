@@ -7,7 +7,7 @@
 //! ## Examples
 //!
 //! ### 1. Handling Nanoseconds
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -15,7 +15,7 @@
 //! ```
 //!
 //! ### 2. Handling Microseconds
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -23,7 +23,7 @@
 //! ```
 //!
 //! ### 3. Handling Milliseconds
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -31,7 +31,7 @@
 //! ```
 //!
 //! ### 4. Handling Seconds
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -39,7 +39,7 @@
 //! ```
 //!
 //! ### 5. Handling Minutes
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -47,7 +47,7 @@
 //! ```
 //!
 //! ### 6. Handling Hours
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -55,7 +55,7 @@
 //! ```
 //!
 //! ### 7. Handling Days
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //!
@@ -63,40 +63,59 @@
 //! ```
 //!
 //! ### 8. Handling Weeks
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //! let timer = LiteDuration::weeks(1);
 //! ```
 //!
 //! ### 9. Handling Months
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //! let timer = LiteDuration::months(1);
 //! ```
 //!
 //! ### 10. Handling Years
-//! 
+//!
 //! ```
 //! use timelite::LiteDuration;
 //! let timer = LiteDuration::years(1);
 //! ```
 
-#![deny(missing_docs)]
-#![deny(missing_doc_code_examples)]
-#![deny(unsafe_code)]
+//#![deny(missing_docs)]
+//#![deny(missing_doc_code_examples)]
+//#![forbid(unsafe_code)]
 
-    /// Module that handles time constants
+/// Module that handles time constants
 #[allow(missing_doc_code_examples)]
 mod constants;
-pub use constants::{MICROS_PER_SEC, MILLIS_PER_SEC, NANOS_PER_MICRO, NANOS_PER_MILLI, NANOS_PER_SEC,SECONDS_PER_DAY,SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK};
+pub use constants::*;
 
-    /// The module that handles conversions
-    ///
-    /// ### Usage
-    /// ```
-    /// use timelite::LiteDuration;
-    /// ```
+/// The module that handles conversions
+///
+/// ### Usage
+/// ```
+/// use timelite::LiteDateTime;
+/// ```
 mod duration;
-pub use duration::LiteDuration;
+pub use duration::*;
+
+// FIXME fix this test
+/*
+#[test]
+fn check_date() {
+    use tai64::TAI64;
+    let now = TAI64::now();
+
+    let mut date_time = LiteDateTime::new(now.to_unix());
+    let secs_to_datetime = date_time.seconds_to_datetime();
+
+    println!("{}", &secs_to_datetime);
+    dbg!(&secs_to_datetime);
+    dbg!(&secs_to_datetime.date());
+    dbg!(&secs_to_datetime.year_month());
+    dbg!(&secs_to_datetime.time());
+    dbg!(&secs_to_datetime.next_unix_date(MonthCount::TwoMonths));
+}
+*/

@@ -1,8 +1,11 @@
-use crate::{TimeStandard, UnixTimestamp, YearType, LEAP_YEAR_MONTHS, NOT_LEAP_YEAR_MONTHS};
+use crate::{
+    TimeStandard, UnixTimestamp, YearType, LEAP_YEAR_MONTHS, LEAP_YEAR_MONTHS_SECONDS,
+    NOT_LEAP_YEAR_MONTHS, NOT_LEAP_YEAR_MONTHS_SECONDS, SECONDS_PER_DAY,
+};
 use core::fmt;
 pub struct LiteDateTime {
     unix_timestamp: UnixTimestamp,
-    year: u64,
+    year: i64,
     month: u8,
     day: u8,
     hour: u8,
@@ -16,7 +19,7 @@ impl LiteDateTime {
     pub fn new(unix_timestamp: UnixTimestamp) -> Self {
         Self {
             unix_timestamp,
-            year: u64::default(),
+            year: i64::default(),
             month: u8::default(),
             day: u8::default(),
             hour: u8::default(),
@@ -28,7 +31,17 @@ impl LiteDateTime {
     }
 
     /// Convert Unix epoch seconds into date time.
+    pub fn seconds_to_datetime_mut(&mut self) -> &mut Self {
+        self.convert_to_self()
+    }
+
+    /// Convert Unix epoch seconds into date time.
+
+    /// Convert Unix epoch seconds into date time.
     pub fn seconds_to_datetime(&mut self) -> &Self {
+        self.convert_to_self()
+    }
+    fn convert_to_self(&mut self) -> &mut Self {
         let mut digital_genesis_time = 1970;
 
         let day_clock: i64 = self.unix_timestamp % 86400;
@@ -59,7 +72,7 @@ impl LiteDateTime {
                 break;
             }
         }
-        self.year = digital_genesis_time as u64;
+        self.year = digital_genesis_time as i64;
         self.time_standard = TimeStandard::Utc;
 
         let mut month = 0;
@@ -78,7 +91,7 @@ impl LiteDateTime {
             };
             month += 1;
         }
-        self.month = month as u8 + 1;
+        self.month = month as u8;
         self.day = day_count as u8 + 1;
 
         self
@@ -106,6 +119,13 @@ impl LiteDateTime {
             self.hour, self.minutes, self.seconds
         )
     }
+
+    pub fn next_unix_date(&self, month_count: MonthCount) -> LiteDateTime {
+        let next_unix_timestamp = self.unix_timestamp + (month_count as i64 * SECONDS_PER_DAY);
+        let mut next_datetime = LiteDateTime::new(next_unix_timestamp);
+        
+        next_datetime.seconds_to_datetime().clone()
+    }
 }
 
 impl fmt::Debug for LiteDateTime {
@@ -128,7 +148,7 @@ impl fmt::Display for LiteDateTime {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{}-{}-{} {}:{}:{}+0000",
+            "{:04}-{:02}-{:02} {:02}:{:02}:{:02}+0000",
             self.year, self.month, self.day, self.hour, self.minutes, self.seconds,
         )
     }
@@ -157,4 +177,19 @@ impl core::clone::Clone for LiteDateTime {
     fn clone(&self) -> LiteDateTime {
         *self
     }
+}
+
+pub enum MonthCount {
+    OneMonth = 1,
+    TwoMonths = 2,
+    ThreeMonths = 3,
+    FourMonths = 4,
+    FiveMonths = 5,
+    SixMonths = 6,
+    SevenMonths = 7,
+    EightMonths = 8,
+    NineMonths = 9,
+    TenMonths = 10,
+    ElevenMonths = 11,
+    TwelveMonths = 12,
 }
