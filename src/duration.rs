@@ -1,104 +1,160 @@
-use crate::{MICROS_PER_SEC, MILLIS_PER_SEC, NANOS_PER_SEC, SECONDS_PER_DAY, SECONDS_PER_HOUR,SECONDS_PER_MINUTE, SECONDS_PER_WEEK};
+use crate::{TimeStandard, UnixTimestamp, YearType, LEAP_YEAR_MONTHS, NOT_LEAP_YEAR_MONTHS};
+use core::fmt;
+pub struct LiteDateTime {
+    unix_timestamp: UnixTimestamp,
+    year: u64,
+    month: u8,
+    day: u8,
+    hour: u8,
+    minutes: u8,
+    seconds: u8,
+    year_type: YearType,
+    time_standard: TimeStandard,
+}
 
-    /// The main struct that handles conversion from human readable time formats to seconds
-    /// ### Structure
-    /// ```
-    /// #[derive(Debug)]
-    /// pub struct LiteDuration;
-    /// ```
-    ///
-    /// #### Usage
-    /// ```
-    /// use timelite::LiteDuration;
-    /// LiteDuration::nanos(1);
-    /// ```
-#[derive(Debug)]
-pub struct LiteDuration;
-    
-    /// #### Usage
-    /// ```
-    /// use timelite::LiteDuration;
-    /// LiteDuration::nanos(1);
-    /// ```
-impl LiteDuration {
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::nanos(1);
-        /// ```
-    pub fn nanos(value: u32) -> f32 {
-        value as f32 / NANOS_PER_SEC as f32
+impl LiteDateTime {
+    pub fn new(unix_timestamp: UnixTimestamp) -> Self {
+        Self {
+            unix_timestamp,
+            year: u64::default(),
+            month: u8::default(),
+            day: u8::default(),
+            hour: u8::default(),
+            minutes: u8::default(),
+            seconds: u8::default(),
+            year_type: YearType::NotLeapYear,
+            time_standard: TimeStandard::Utc,
+        }
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::micros(1);
-        /// ```
-    pub fn micros(value: u32) -> f32 {
-        value as f32 / MICROS_PER_SEC as f32
+
+    /// Convert Unix epoch seconds into date time.
+    pub fn seconds_to_datetime(&mut self) -> &Self {
+        let mut digital_genesis_time = 1970;
+
+        let day_clock: i64 = self.unix_timestamp % 86400;
+        let mut day_count: i64 = self.unix_timestamp / 86400;
+
+        self.seconds = (day_clock % 60) as u8;
+        self.minutes = ((day_clock % 3600) / 60) as u8;
+        self.hour = (day_clock / 3600) as u8;
+
+        let is_leap_year = LiteDateTime::check_is_leap_year(digital_genesis_time);
+
+        if is_leap_year {
+            self.year_type = YearType::IsLeapYear;
+        } else {
+            self.year_type = YearType::NotLeapYear;
+        }
+
+        loop {
+            let year_size = match is_leap_year {
+                true => 366,
+                false => 365,
+            };
+
+            if day_count >= year_size {
+                day_count -= year_size;
+                digital_genesis_time += 1;
+            } else {
+                break;
+            }
+        }
+        self.year = digital_genesis_time as u64;
+        self.time_standard = TimeStandard::Utc;
+
+        let mut month = 0;
+
+        while day_count
+            >= if is_leap_year {
+                LEAP_YEAR_MONTHS[month]
+            } else {
+                NOT_LEAP_YEAR_MONTHS[month]
+            }
+        {
+            day_count -= if is_leap_year {
+                LEAP_YEAR_MONTHS[month]
+            } else {
+                NOT_LEAP_YEAR_MONTHS[month]
+            };
+            month += 1;
+        }
+        self.month = month as u8 + 1;
+        self.day = day_count as u8 + 1;
+
+        self
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::millis(1);
-        /// ```
-    pub fn millis(value: u32) -> f32 {
-        value as f32 / MILLIS_PER_SEC as f32
+
+    pub fn check_is_leap_year(value: i64) -> bool {
+        if value % 4 == 0 && (value % 100 != 0 || value % 400 == 0) {
+            true
+        } else {
+            false
+        }
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::seconds(1);
-        /// ```
-    pub fn seconds(value: u64) -> u64 {
-        value
+
+    pub fn date(&self) -> String {
+        format!("{:04}-{:02}-{:02}-UTC", self.year, self.month, self.day)
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::minutes(1);
-        /// ```
-    pub fn minutes(value: u64) -> u64 {
-        value * SECONDS_PER_MINUTE
+
+    pub fn year_month(&self) -> String {
+        format!("{:04}-{:02}-UTC", self.year, self.month)
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::hours(1);
-        /// ```
-    pub fn hours(value: u64) -> u64 {
-        value * SECONDS_PER_HOUR
+
+    pub fn time(&self) -> String {
+        format!(
+            "{:02}:{:02}:{:02}+0300",
+            self.hour, self.minutes, self.seconds
+        )
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::days(1);
-        /// ```
-    pub fn days(value: u64) -> u64 {
-        value * SECONDS_PER_DAY
+}
+
+impl fmt::Debug for LiteDateTime {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("LiteDateTime")
+            .field("year", &self.year)
+            .field("month", &self.month)
+            .field("day", &self.day)
+            .field("hours", &self.hour)
+            .field("minutes", &self.minutes)
+            .field("seconds", &self.seconds)
+            .field("year_type", &self.year_type)
+            .field("time_standard", &self.time_standard)
+            .field("unix_timestamp", &self.unix_timestamp)
+            .finish()
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::weeks(1);
-        /// ```
-    pub fn weeks(value: u64) -> u64 {
-        value * SECONDS_PER_WEEK
+}
+
+impl fmt::Display for LiteDateTime {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}-{}-{} {}:{}:{}+0000",
+            self.year, self.month, self.day, self.hour, self.minutes, self.seconds,
+        )
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::months(1);
-        /// ```
-    pub fn months(value: u64) -> u64 {
-        value * SECONDS_PER_WEEK * 4
+}
+
+impl core::cmp::PartialEq for LiteDateTime {
+    fn eq(&self, other: &Self) -> bool {
+        if self.year == other.year
+            && self.month == other.month
+            && self.day == other.day
+            && self.hour == other.hour
+            && self.minutes == other.minutes
+            && self.seconds == other.seconds
+        {
+            true
+        } else {
+            false
+        }
     }
-        /// #### Usage
-        /// ```
-        /// use timelite::LiteDuration;
-        /// LiteDuration::years(1);
-        /// ```
-    pub fn years(value: u64) -> u64 {
-        value * SECONDS_PER_WEEK * 4 * 12
+}
+impl core::cmp::Eq for LiteDateTime {}
+
+impl core::marker::Copy for LiteDateTime {}
+
+impl core::clone::Clone for LiteDateTime {
+    fn clone(&self) -> LiteDateTime {
+        *self
     }
 }
